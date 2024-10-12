@@ -120,10 +120,18 @@ const tweetMessages = [
 ];
 
 
+const tweetedMessages = new Set();
+let tweetsSent = 0; // Counter to track the number of tweets sent
+
 // Function to randomly select a tweet message that includes $ZAAR
 function generateTweet() {
-  // Ensure that all tweets have $ZAAR included
-  return tweetMessages[Math.floor(Math.random() * tweetMessages.length)];
+  let tweet;
+  do {
+    tweet = tweetMessages[Math.floor(Math.random() * tweetMessages.length)];
+  } while (tweetedMessages.has(tweet)); // Keep generating until a new tweet is found
+  tweetedMessages.add(tweet); // Add the newly selected tweet to the set
+  tweetsSent++; // Increment the tweets sent counter
+  return tweet;
 }
 
 // Function to post the tweet
@@ -132,14 +140,22 @@ async function tweetMessage() {
     const tweetContent = generateTweet();
     await twitterClient.v2.tweet(tweetContent);
     console.log(`Tweeted: ${tweetContent}`);
+    
+    // Reset mechanism: Check if all tweets have been sent
+    if (tweetsSent >= tweetMessages.length) {
+      console.log('All unique tweets have been sent. Resetting the tweet tracker.');
+      tweetedMessages.clear(); // Clear the set of tweeted messages
+      tweetsSent = 0; // Reset the counter
+    }
   } catch (error) {
     console.error('Error tweeting:', error);
   }
 }
 
+// Initial tweet
 tweetMessage();
 
-// Schedule the cron job to tweet every 30 minutes
+// Schedule the cron job to tweet every 10 minutes
 cron.schedule('*/10 * * * *', () => {
   console.log('Running scheduled tweet...');
   tweetMessage();
