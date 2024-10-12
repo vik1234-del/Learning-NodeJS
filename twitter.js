@@ -116,46 +116,104 @@ const tweetMessages = [
   "Join us for an amazing journey with $ZAAR! 🚀",
   "Embrace the possibilities with $ZAAR! 🔮",
   "Keep sharing your $ZAAR journey! 📷",
-  "The community thrives on your support! Use $ZAAR! 🌳"
+  "The community thrives on your support! Use $ZAAR! 🌳",
+  "Together we can unlock the full potential of $ZAAR! 🚀",
+  "Every interaction with $ZAAR is a step toward community growth! 🤝",
+  "Let your voice resonate through $ZAAR! 🗣️",
+  "Experience the thrill of growth with $ZAAR! 🌱",
+  "Let’s inspire positivity with every $ZAAR tweet! 🌈",
+  "Your contributions to $ZAAR matter! Share them! 🌟",
+  "Engage and elevate with $ZAAR! 🌄",
+  "Unlock rewards by engaging with $ZAAR! 🔓",
+  "Let’s collaborate for a brighter future with $ZAAR! 🤝",
+  "Spread positivity and opportunities through $ZAAR! 🌍",
+  "Create connections and opportunities with $ZAAR! 🔗",
+  "Your thoughts matter! Share them with $ZAAR! 💭",
+  "Let’s create a wave of excitement with $ZAAR! 🌊",
+  "Elevate your presence in the community with $ZAAR! 🌟",
+  "Every $ZAAR tweet brings us closer to our goals! 🎯",
+  "Share your insights with $ZAAR! 💡",
+  "Let’s push boundaries together with $ZAAR! 🚀",
+  "Join us in making $ZAAR a success story! 📖",
+  "Your input can shape the future of $ZAAR! 🛤️",
+  "Together, we can achieve more with $ZAAR! 🤝",
+  "Share your ideas and grow with $ZAAR! 🌱",
+  "Let’s inspire innovation through $ZAAR! 💡",
+  "Celebrate your milestones with $ZAAR! 🎉",
+  "The future is bright with our collective efforts in $ZAAR! 🌞",
+  "Join us in making waves in the community with $ZAAR! 🌊",
+  "Let’s turn dreams into reality with our passion for $ZAAR! ✨",
+  "Together, we can unlock new opportunities with $ZAAR! 🔓",
+  "Let’s thrive and support each other in the $ZAAR journey! 🌈",
+  "Your journey is valuable! Share it with $ZAAR! 📖",
+  "Get ready to explore new horizons with $ZAAR! 🚀",
+  "Make your mark in the community with $ZAAR! ✍️",
+  "Embrace the possibilities that come with $ZAAR! 💫",
+  "Together, let’s create a lasting legacy with $ZAAR! 🏛️",
+  "Your thoughts and ideas can spark change with $ZAAR! 🔥",
+  "Join the movement to elevate $ZAAR! 📈",
+  "Share your insights and engage with $ZAAR! 💬",
+  "Let’s inspire each other to achieve greatness with $ZAAR! 🌟",
+  "Celebrate every achievement with the $ZAAR community! 🎊",
+  "Keep sharing your journey with $ZAAR! 🌿",
+  "Together, we can achieve incredible things with $ZAAR! 🏆",
+  "Let’s turn our dreams into reality with $ZAAR! 🌅",
+  "Your voice is powerful! Use $ZAAR to amplify it! 📣",
+  "Together, we can revolutionize the industry with $ZAAR! 🔄",
+  "Get involved and make a difference with $ZAAR! 🌍",
+  "Keep the spirit of community alive with $ZAAR! ❤️",
+  "Every tweet with $ZAAR is a step towards progress! 🚶‍♂️",
+  "Join us in the quest for greatness with $ZAAR! 🚀",
+  "Share your $ZAAR story and inspire others! 📖",
+  "Let’s create a better tomorrow with our efforts in $ZAAR! 🌈",
+  "Your participation matters! Join us with $ZAAR! 🤝",
+  "Embrace your journey with $ZAAR! 💖",
+  "Let’s build a brighter future with $ZAAR! 🌅",
+  "Your ideas can spark inspiration with $ZAAR! 💡",
+  "Together, we can achieve our goals with $ZAAR! 🌍",
+  "Join the adventure and grow with $ZAAR! 🎉",
+  "Every moment counts! Make yours with $ZAAR! ⏳",
+  "Let’s create magic together with $ZAAR! ✨",
+  "In it for the long haul! Keep tweeting with $ZAAR! ⏰",
 ];
 
 
-const tweetedMessages = new Set();
-let tweetsSent = 0; // Counter to track the number of tweets sent
+let availableTweets = [...tweetMessages];
 
-// Function to randomly select a tweet message that includes $ZAAR
-function generateTweet() {
-  let tweet;
-  do {
-    tweet = tweetMessages[Math.floor(Math.random() * tweetMessages.length)];
-  } while (tweetedMessages.has(tweet)); // Keep generating until a new tweet is found
-  tweetedMessages.add(tweet); // Add the newly selected tweet to the set
-  tweetsSent++; // Increment the tweets sent counter
-  return tweet;
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
 }
 
-// Function to post the tweet
+function generateTweet() {
+  if (availableTweets.length === 0) {
+    console.log('All tweets have been used. Resetting and shuffling the tweet pool.');
+    availableTweets = [...tweetMessages];
+    shuffleArray(availableTweets);
+  }
+  return availableTweets.pop();
+}
+
 async function tweetMessage() {
   try {
     const tweetContent = generateTweet();
     await twitterClient.v2.tweet(tweetContent);
     console.log(`Tweeted: ${tweetContent}`);
-    
-    // Reset mechanism: Check if all tweets have been sent
-    if (tweetsSent >= tweetMessages.length) {
-      console.log('All unique tweets have been sent. Resetting the tweet tracker.');
-      tweetedMessages.clear(); // Clear the set of tweeted messages
-      tweetsSent = 0; // Reset the counter
-    }
+    console.log(`Remaining unique tweets: ${availableTweets.length}`);
   } catch (error) {
     console.error('Error tweeting:', error);
   }
 }
 
+// Initial shuffle
+shuffleArray(availableTweets);
+
 // Initial tweet
 tweetMessage();
 
-// Schedule the cron job to tweet every 10 minutes
+// Schedule the cron job to tweet every 10 min
 cron.schedule('*/10 * * * *', () => {
   console.log('Running scheduled tweet...');
   tweetMessage();
