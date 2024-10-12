@@ -140,7 +140,7 @@ async function tweetMessage() {
 tweetMessage();
 
 // Schedule the cron job to tweet every 30 minutes
-cron.schedule('*/1 * * * *', () => {
+cron.schedule('*/10 * * * *', () => {
   console.log('Running scheduled tweet...');
   tweetMessage();
 });
