@@ -1,6 +1,6 @@
-require('dotenv').config(); 
-const { TwitterApi } = require('twitter-api-v2');
-const cron = require('node-cron');
+require("dotenv").config();
+const { TwitterApi } = require("twitter-api-v2");
+const cron = require("node-cron");
 
 // Initialize the Twitter client with OAuth 1.0a credentials
 const twitterClient = new TwitterApi({
@@ -14,7 +14,7 @@ const twitterClient = new TwitterApi({
 const tweetMessages = [
   "Get ready for a boost! This tweet will give you 60000 $ZAAR from @ordzaar points🪂🚀",
   "Don't miss out! $ZAAR FARMING ends on 14th. Keep farming! 🔥",
-  "Join the $ZAAR community and let’s achieve more XP together! 🚀",
+  "Join the $ZAAR community and let’s achieve more XP together! Last day to mine, make it count! 🚀",
   "Remember to FOLLOW @luxe_strides for updates! 🧑🏽‍🌾",
   "LIKE this tweet for 100 $ZAAR! 🧑🏽‍🌾",
   "Retweet to earn 1000 $ZAAR! Let’s grow together! 💰",
@@ -175,8 +175,19 @@ const tweetMessages = [
   "Every moment counts! Make yours with $ZAAR! ⏳",
   "Let’s create magic together with $ZAAR! ✨",
   "In it for the long haul! Keep tweeting with $ZAAR! ⏰",
+  "Making moves in the crypto space,\nand $ZAAR is leading the way!\n#Zaar",
+  "The future is digital,\nand $ZAAR is the key!\n#Zaar",
+  "New day, new opportunities,\n$ZAAR always keeps me ahead!\n#Zaar",
+  "Making moves in the crypto space,\nand $ZAAR is leading the way!\n#Zaar",
+  "The future is digital,\nand $ZAAR is the key!\n#Zaar",
+  "New day, new opportunities,\n$ZAAR always keeps me ahead!\n#Zaar",
+  "Crypto's evolving faster than ever,\nand $ZAAR is the spark!\nTweet it, believe it,\n#Zaar!",
+  "Staying ahead in the crypto game,\n$ZAAR is my go-to strategy!\nKeep moving, keep earning,\n#Zaar",
+  "Every tweet counts towards something bigger,\nespecially when $ZAAR is involved!\nPower up your balance,\n#Zaar",
+  "Who would've thought tweeting could be so powerful?\nWith $ZAAR, every tweet counts.\nGrowing my balance daily,\ninfluencing the SocialFi space.\n#Zaar",
+  "Crypto meets social influence,\nand $ZAAR is leading that charge.\nJoin me in making every tweet matter,\nwatch your balance grow,\n#Zaar!",
+  "$ZAAR isn't just a token,\nit's a movement powered by tweets!\nIncreasing my balance with every message,\nwatching the SocialFi world change.\n#Zaar!",
 ];
-
 
 let availableTweets = [...tweetMessages];
 
@@ -189,7 +200,9 @@ function shuffleArray(array) {
 
 function generateTweet() {
   if (availableTweets.length === 0) {
-    console.log('All tweets have been used. Resetting and shuffling the tweet pool.');
+    console.log(
+      "All tweets have been used. Resetting and shuffling the tweet pool."
+    );
     availableTweets = [...tweetMessages];
     shuffleArray(availableTweets);
   }
@@ -203,7 +216,7 @@ async function tweetMessage() {
     console.log(`Tweeted: ${tweetContent}`);
     console.log(`Remaining unique tweets: ${availableTweets.length}`);
   } catch (error) {
-    console.error('Error tweeting:', error);
+    console.error("Error tweeting:", error);
   }
 }
 
@@ -213,8 +226,8 @@ shuffleArray(availableTweets);
 // Initial tweet
 tweetMessage();
 
-// Schedule the cron job to tweet every 10 min
-cron.schedule('*/10 * * * *', () => {
-  console.log('Running scheduled tweet...');
+//Schedule the cron job to tweet every 20 min
+cron.schedule("*/10 * * * *", () => {
+  console.log("Running scheduled tweet...");
   tweetMessage();
 });
